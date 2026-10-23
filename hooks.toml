@@ -1,0 +1,12 @@
+# Hooks ported from Claude Code (~/.claude/settings.json)
+
+# Ported from Claude's PostToolUse (Edit|MultiEdit|Write) hook.
+# Vibe's post_tool fires after edit/write_file; the script reads the Vibe
+# JSON payload from stdin and logs to <project>/.vibe/tsc-cache/.
+[[hooks]]
+name = "post-tool-use-tracker"
+type = "post_tool"
+match = 're:(file_system\.)?(edit|write_file)'
+command = "bash $HOME/.vibe/hooks/post-tool-use-tracker.sh"
+description = "Track edited files and their repos for build/tsc follow-up"
+timeout = 30.0

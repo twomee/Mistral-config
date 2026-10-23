@@ -1,0 +1,20 @@
+# Secrets and credentials — never commit
+.env
+.env.*
+
+# Machine-specific and ephemeral state
+logs/
+vibehistory
+trusted_folders.toml
+connector_bootstrap_cache.json
+connector_bootstrap_cache.json.lock
+*.lock
+managed_config_cache.json
+experiment_eval_cache.json
+cache.toml
+whoami_cache.json
+ui_startup_config.json
+shell-tool/
+
+# Project-local caches created by hooks inside ~/.vibe
+tsc-cache/

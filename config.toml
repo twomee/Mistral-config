@@ -1,0 +1,74 @@
+theme = "solarized-dark"
+active_model = ""
+active_tts_model = "voxtral-tts"
+applied_migrations = [
+    "bash_read_only_defaults_v1",
+]
+
+[tools.bash]
+allowlist = [
+    "basename",
+    "cat",
+    "cd",
+    "cd /home/ido/Downloads/cloud-store-main && cat >> postgres/init.sql << 'EOF'\n\n-- Cloud hierarchy storage: adjacency list model.\n-- A single row per node keeps writes O(1) per node (moves only touch one row),\n-- and a recursive CTE fetches any subtree in a single query.\n-- position preserves sibling order. The FK is deferred so a whole hierarchy\n-- can be upserted in one bulk statement regardless of row order,\n-- and ON DELETE CASCADE keeps the subtree consistent when nodes are removed.\nCREATE TABLE hierarchy_nodes (\n    node_id   BIGINT PRIMARY KEY,\n    node_type VARCHAR(255) NOT NULL,\n    parent_id BIGINT REFERENCES hierarchy_nodes (node_id) ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED,\n    position  INT NOT NULL DEFAULT 0\n);\n\nCREATE INDEX idx_hierarchy_nodes_parent_id ON hierarchy_nodes (parent_id);\nEOF",
+    "comm",
+    "cut",
+    "date",
+    "diff",
+    "dirname",
+    "docker --version",
+    "docker compose version",
+    "du",
+    "echo",
+    "file",
+    "find",
+    "flutter",
+    "fmt",
+    "fold",
+    "git diff",
+    "git log",
+    "git status",
+    "go build",
+    "go vet",
+    "grep",
+    "head",
+    "join",
+    "less",
+    "ls",
+    "md5sum",
+    "more",
+    "nl",
+    "node",
+    "npm --version",
+    "od",
+    "paste",
+    "pwd",
+    "python3",
+    "readlink",
+    "rustc",
+    "sha1sum",
+    "sha256sum",
+    "shasum",
+    "sort",
+    "stat",
+    "sum",
+    "tac",
+    "tail",
+    "tr",
+    "tree",
+    "uname",
+    "uniq",
+    "wc",
+    "which",
+    "whoami",
+]
+
+[tools.write_file]
+allowlist = [
+    "vibe-path:exact:/home/ido/.agents/sim-test.js",
+]
+
+[tools.read_file]
+allowlist = [
+    "vibe-path:exact:/home/ido/fiber-stability-2026-10-22-20-45.csv",
+]
