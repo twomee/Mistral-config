@@ -3,7 +3,9 @@
 Portable configuration for [Mistral Vibe](https://docs.mistral.ai/vibe/code/overview) —
 skills, rules, prompts, hooks, and settings. The `~/.vibe` directory is itself a
 git repo; portable config is tracked while secrets and ephemeral state are
-gitignored.
+gitignored. There is no separate backup archive to restore **from** — the repo
+itself **is** the config folder. Restoring means cloning it to the exact
+location Vibe reads.
 
 ## What's backed up
 
@@ -21,17 +23,37 @@ gitignored.
 
 ## Quick Start
 
-### New machine (restore)
+### New machine — Vibe not installed yet (restore, Scenario A)
 
 ```bash
-git clone <repo-url> ~/.vibe
+git clone https://github.com/twomee/Mistral-config.git ~/.vibe
 mkdir -p ~/.vibe/logs
-# Recreate your API keys manually:
-echo "MISTRAL_API_KEY=..." > ~/.vibe/.env
+```
+
+The clone writes every file directly where Vibe expects it
+(`~/.vibe/AGENTS.md`, `~/.vibe/skills/...`, `~/.vibe/hooks.toml`, ...).
+Nothing is moved or copied by hand. Then recreate your API key (never stored
+in the repo):
+
+```bash
+echo "MISTRAL_API_KEY=your-key" > ~/.vibe/.env
 chmod 600 ~/.vibe/.env
 ```
 
-Then run `vibe` and `/reload` if a session is already open.
+Install Vibe (`uv tool install mistral-vibe`), run `vibe`, done.
+
+### Machine where Vibe already ran (restore, Scenario B)
+
+If `~/.vibe` already exists (Vibe creates it with logs/caches on first run),
+overlay the backup onto it:
+
+```bash
+git clone https://github.com/twomee/Mistral-config.git ~/vibe-config-restore
+cp -rT ~/vibe-config-restore ~/.vibe
+rm -rf ~/vibe-config-restore
+```
+
+Then recreate `~/.vibe/.env` as above.
 
 ### Save changes (backup)
 
@@ -47,10 +69,12 @@ Stages, commits, and pushes all config changes to the remote.
 ~/.vibe/install.sh status
 ```
 
-## First-time setup on this machine
+## First-time setup on a new machine's clone
+
+The remote is already set. If you ever clone from scratch elsewhere:
 
 ```bash
-cd ~/.vibe
-git remote add origin git@github.com:<you>/Vibe-Config.git
+git -C ~/.vibe remote add origin https://github.com/twomee/Mistral-config.git
 ~/.vibe/install.sh backup
 ```
+
